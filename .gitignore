@@ -1,0 +1,12 @@
+﻿.venv/
+__pycache__/
+*.py[cod]
+.env
+.streamlit/secrets.toml
+
+# Keep real CGM data and derived artifacts private
+data/Dexcom_001.csv
+data/real_cgm_clean.csv
+data/real_cgm_forecast.csv
+models/real_cgm_model.joblib
+outputs/real_cgm_*

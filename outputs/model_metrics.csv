@@ -1,0 +1,4 @@
+model,evaluation_split,forecast_minutes,MAE_mg_dl,RMSE_mg_dl
+Current glucose baseline,test,60,10.069682539682539,12.773408638807743
+Random Forest,validation,60,5.225264426291691,6.650042691513407
+Random Forest,test,60,4.962223659869783,6.289442082301421
