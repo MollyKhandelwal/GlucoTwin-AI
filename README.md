@@ -1,106 +1,71 @@
 # 🧬 GlucoTwin AI
 ### Patient-Specific Glucose Forecasting Digital Twin
 
-**GlucoTwin AI** is an educational proof of concept for exploring patient-state representation and short-horizon glucose forecasting using Continuous Glucose Monitoring (CGM) data and synthetic Electronic Health Record (EHR) data.
+**GlucoTwin AI** is an educational proof of concept that explores patient-state representation and short-horizon glucose forecasting using Continuous Glucose Monitoring (CGM) data and synthetic Electronic Health Record (EHR) data.
 
 The project combines data preparation, time-series feature engineering, machine learning, forecasting evaluation, and an interactive Streamlit dashboard.
 
-> **Disclaimer:** This is a research prototype, not a medical device. It is not intended for diagnosis, treatment, or clinical decision-making.
+> **Disclaimer:** GlucoTwin AI is a research prototype, not a medical device. It is not intended for diagnosis, treatment, or clinical decision-making.
 
 ## 🎯 Problem Statement
 
-Glucose levels can change over time, making it useful to investigate whether recent sensor measurements can help estimate future glucose levels.
-
-GlucoTwin AI explores a digital-twin-inspired workflow that transforms historical glucose readings into patient-state features and uses machine learning to forecast glucose approximately 60 minutes ahead.
+Glucose monitoring produces time-series data that can help represent a patient's recent state. This project explores whether historical glucose measurements and patient attributes can support short-horizon glucose forecasting.
 
 ## 💡 Proposed Solution
 
-The prototype contains two separate experiments:
+GlucoTwin AI provides an interactive prototype that:
 
-1. **Synthetic patient experiment:** Uses generated CGM readings and synthetic EHR records to demonstrate patient-level data integration and forecasting.
-2. **Real CGM experiment:** Uses prepared Dexcom CGM data from one participant to evaluate a persistence baseline against a Random Forest model.
-
-The experiments are displayed separately. Synthetic EHR records are not presented as real medical records belonging to the CGM participant.
+- Displays a synthetic patient's profile and recent glucose history.
+- Engineers temporal features from CGM readings.
+- Forecasts glucose values 60 minutes ahead in an experimental pipeline.
+- Compares model predictions against a persistence baseline.
+- Presents metrics, prediction plots, and experiment results.
+- Keeps synthetic-data and real-CGM experiments separate.
 
 ## ✨ Key Features
 
-- Interactive Streamlit dashboard
-- Synthetic patient overview with age, BMI, and HbA1c
-- Historical glucose time-series visualization
-- Short-horizon glucose forecasting
-- Persistence baseline comparison
-- Random Forest regression model
-- Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE) evaluation
-- Feature-importance analysis
-- Saved predictions and evaluation metrics
-- Separate presentation of synthetic and real-data experiments
+- **Patient overview:** Displays synthetic EHR attributes and sensor readings.
+- **Glucose forecast:** Presents the synthetic-data forecasting workflow.
+- **Model evaluation:** Shows evaluation metrics and prediction comparisons.
+- **Real CGM experiment:** Explores forecasting on prepared Dexcom CGM readings.
+- **Interactive dashboard:** Built using Streamlit.
+- **Architecture documentation:** Describes the system design and workflow.
 
-## 🏗️ System Architecture
-
-```text
-CGM Time-Series Data       Synthetic EHR Data
-          |                        |
-          v                        v
-  Data Cleaning              Patient Records
-          |                        |
-          v                        |
-  Time-Series Features <------------+
-          |
-          v
-  Forecast Dataset
-          |
-          v
-  Train / Test Evaluation
-          |
-          v
-  Persistence Baseline vs Random Forest
-          |
-          v
-  Forecasts, Metrics and Visualizations
-          |
-          v
-  Streamlit Dashboard
-```
-
-The real CGM experiment is evaluated separately from the synthetic patient experiment.
-
-## 🛠️ Technology Stack
+## 🧠 Technology Stack
 
 | Component | Technology |
 |---|---|
-| Programming language | Python |
+| Language | Python |
 | Data processing | Pandas, NumPy |
-| Machine learning | Scikit-learn |
-| Forecasting model | Random Forest Regressor |
+| Machine learning | Scikit-learn, Random Forest |
 | Visualization | Matplotlib |
-| Interactive dashboard | Streamlit |
-| Data format | CSV |
+| Dashboard | Streamlit |
+| Model persistence | Joblib |
+| Documentation | Markdown, PDF |
 | Version control | Git and GitHub |
 
-## 📁 Repository Structure
+## 🏗️ System Workflow
 
-```text
-GlucoTwin-AI/
-├── data/
-│   ├── synthetic_cgm.csv
-│   └── synthetic_ehr.csv
-├── models/
-├── outputs/
-│   ├── model_metrics.csv
-│   └── test_predictions.csv
-├── src/
-│   ├── app.py
-│   ├── generate_data.py
-│   ├── train_model.py
-│   ├── explore_real_cgm.py
-│   ├── prepare_real_forecast.py
-│   ├── evaluate_real_baseline.py
-│   ├── train_real_model.py
-│   └── plot_real_predictions.py
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
+1. Load synthetic EHR and CGM data or prepared real CGM data.
+2. Validate, clean, and prepare the time-series records.
+3. Engineer features from recent glucose history.
+4. Train or evaluate the forecasting model.
+5. Compare predictions against a persistence baseline.
+6. Display results in the Streamlit dashboard.
+
+**Architecture document:** [`outputs/GlucoTwin_AI_Architecture.pdf`](outputs/GlucoTwin_AI_Architecture.pdf)
+
+## 📊 Experimental Evaluation
+
+### Synthetic-data experiment
+
+The synthetic experiment uses generated EHR and CGM records. Its results are useful for testing the modelling pipeline, but they do not establish real-world forecasting performance.
+
+### Real-CGM experiment
+
+The real-data experiment uses prepared Dexcom CGM readings from one participant. In the current experiment, the Random Forest model achieved a test MAE of approximately **10.266 mg/dL**, compared with approximately **11.070 mg/dL** for the persistence baseline in the displayed evaluation.
+
+These results are preliminary and limited to the available participant and evaluation setup. They do not establish generalization to other people or clinical accuracy.
 
 ## 🚀 Getting Started
 
@@ -120,16 +85,10 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-If PowerShell blocks activation, use Command Prompt and run:
-
-```bat
-.venv\Scripts\activate.bat
-```
-
 ### 3. Install dependencies
 
 ```bash
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### 4. Launch the dashboard
@@ -138,75 +97,64 @@ python -m pip install -r requirements.txt
 python -m streamlit run src/app.py
 ```
 
-Streamlit will display a local URL, usually `http://localhost:8501`.
+Streamlit will provide a local URL, usually `http://localhost:8501`.
 
-### 5. Generate synthetic data or train the synthetic model
+## 📁 Repository Structure
 
-Run these commands if you want to regenerate the synthetic experiment:
-
-```bash
-python src/generate_data.py
-python src/train_model.py
+```text
+GlucoTwin-AI/
+├── data/
+│   ├── synthetic_cgm.csv
+│   └── synthetic_ehr.csv
+├── models/
+├── outputs/
+│   ├── architecture.md
+│   ├── GlucoTwin_AI_Architecture.pdf
+│   ├── model_metrics.csv
+│   └── test_predictions.csv
+├── src/
+│   ├── app.py
+│   ├── generate_data.py
+│   ├── train_model.py
+│   ├── train_real_model.py
+│   ├── prepare_real_forecast.py
+│   ├── evaluate_real_baseline.py
+│   ├── explore_real_cgm.py
+│   ├── plot_real_predictions.py
+│   └── generate_architecture_pdf.py
+├── .gitignore
+└── requirements.txt
 ```
 
-**Note:** These commands may overwrite generated CSV files and model outputs. Run them only when you intend to regenerate the experiment.
+*Note: Generated output files may vary as experiments are rerun.*
 
-## 📊 Real CGM Experiment
+## ⚠️ Limitations
 
-The real-data experiment evaluates a 60-minute forecasting horizon using prepared CGM readings from one participant.
+- Synthetic EHR attributes are not matched to real clinical records.
+- The real-CGM experiment currently represents only one participant.
+- A lower test error in this experiment does not establish clinical utility.
+- The model has not been clinically validated.
+- The prototype must not be used to make treatment or medication decisions.
 
-The current recorded test results are:
+## 🔭 Future Work
 
-| Model | Test MAE (mg/dL) | Test RMSE (mg/dL) |
-|---|---:|---:|
-| Persistence baseline | 9.431 | 14.156 |
-| Random Forest | 10.266 | 14.152 |
+- Evaluate on more participants and independent datasets.
+- Improve temporal validation and forecasting robustness.
+- Investigate uncertainty estimation and prediction intervals.
+- Explore interpretable patient-state representations.
+- Improve model monitoring, data quality checks, and reproducibility.
+- Investigate prospective validation under appropriate ethical and clinical oversight.
 
-**Interpretation:** In this experiment, the Random Forest model has a higher MAE than the persistence baseline, while its RMSE is marginally lower. It does not outperform the baseline on both metrics.
+## 📄 License
 
-These results are exploratory and apply only to the evaluated participant and test period. They do not establish generalization to other people or clinical forecasting accuracy.
+A license has not yet been selected. Licensing will be specified after the project owner chooses an appropriate license.
 
-## 🧪 Evaluation Methodology
-
-The prototype uses:
-
-- **MAE:** Mean absolute difference between predicted and observed glucose values.
-- **RMSE:** Square root of the mean squared prediction error.
-- **Persistence baseline:** Uses the current glucose reading as the future estimate.
-- **Random Forest:** Learns relationships between recent glucose measurements and the target glucose value.
-
-The target horizon is approximately 60 minutes. Results depend on data quality, sampling intervals, missing values, and the evaluation split.
-
-## 🔐 Data, Privacy and Limitations
-
-- Synthetic EHR and CGM records are generated for demonstration.
-- The real CGM experiment uses data from one participant.
-- The real CGM data and synthetic EHR records are not a validated, patient-matched clinical dataset.
-- A single-participant experiment cannot establish population-level performance.
-- Synthetic-data performance must not be interpreted as real-world clinical accuracy.
-- Data-use terms and attribution requirements must be followed for any external dataset.
-- No clinical recommendations should be made from these model outputs.
-
-## 🔮 Future Scope
-
-- Evaluate on multiple participants and independent datasets.
-- Improve time-aware validation and forecasting methodology.
-- Investigate temporal models such as gradient boosting and recurrent neural networks.
-- Add uncertainty estimates and prediction intervals.
-- Improve monitoring of missing readings and sensor irregularities.
-- Integrate validated clinical context only when suitable, authorized data is available.
-- Conduct rigorous external validation before considering clinical applications.
-
-## 👩‍💻 Author
+## 👤 Author
 
 **Molly Khandelwal**
 
 GitHub: [@MollyKhandelwal](https://github.com/MollyKhandelwal)
 
-## 📄 License
-
-No license has been selected for this repository yet. Before sharing or reusing the code, add an appropriate open-source license after confirming that the project and its included data permit it.
-
 ---
 
-*GlucoTwin AI — An educational proof of concept for exploring digital-twin-inspired glucose forecasting.*
+*GlucoTwin AI is an educational research prototype. It is not intended for diagnosis, treatment, or clinical decision-making.*
